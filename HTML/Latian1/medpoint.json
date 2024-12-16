@@ -1,0 +1,4483 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+      "title": "Medpoint API",
+      "description": "Provide API for Medpoint System",
+      "version": "1.0.0"
+    },
+    "servers": [
+      {
+        "url": "https://api.medpoint.com/v1",
+        "description": "Production server"
+      },
+      {
+        "url": "https://localhost:8002/rest/v1",
+        "description": "Development server"
+      }
+    ],
+    "security": [
+      {
+        "ApiKeyAuth": [],
+        "BearerAuth": []
+      }
+    ],
+    "paths": {
+      "/auth/v1/token": {
+        "post": {
+          "tags": [
+            "Authentication"
+          ],
+          "summary": "User login",
+          "description": "Authenticates a user using their email and password. Requires an API key in the header",
+          "parameters": [
+            {
+              "name": "grant_type",
+              "in": "query",
+              "required": true,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "password",
+                "enum": [
+                  "password"
+                ]
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/v1_token_body"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful login",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200"
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid credentials",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_400"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": []
+            }
+          ]
+        }
+      },
+      "/users": {
+        "get": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Get all users",
+          "description": "Retrieve a list of all users.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific user by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_1"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Create a new user",
+          "description": "Create new user",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "User created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Delete a user by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific user by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "User deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Users"
+          ],
+          "summary": "Update a user by ID",
+          "description": "Update an existing user's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific user by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "User updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/doctors": {
+        "get": {
+          "tags": [
+            "Doctors"
+          ],
+          "summary": "Get all doctors",
+          "description": "Retrieve a list of all doctors.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific doctor by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_2"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Doctors"
+          ],
+          "summary": "Create a new doctor",
+          "description": "Create new doctor",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Doctor created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Doctors"
+          ],
+          "summary": "Delete a doctor by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific doctor by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Doctor deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Doctors"
+          ],
+          "summary": "Update a doctor by ID",
+          "description": "Update an existing doctor's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific doctor by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Doctor updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/user-roles": {
+        "get": {
+          "tags": [
+            "User Roles"
+          ],
+          "summary": "Get all user roles",
+          "description": "Retrieve a list of all user roles.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific user role by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_3"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "User Roles"
+          ],
+          "summary": "Create a new user role",
+          "description": "Create new user role",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRoleInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "User role created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "User Roles"
+          ],
+          "summary": "Delete a user role by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific user role by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "User role deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "User Roles"
+          ],
+          "summary": "Update a user role by ID",
+          "description": "Update an existing user role's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific user role by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserRoleInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "User role updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/addresses": {
+        "get": {
+          "tags": [
+            "Addresses"
+          ],
+          "summary": "Get all addresses",
+          "description": "Retrieve a list of all addresses.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific address by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_4"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Addresses"
+          ],
+          "summary": "Create a new address",
+          "description": "Create new address",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddressInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Address created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Addresses"
+          ],
+          "summary": "Delete a address by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific address by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Address deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Addresses"
+          ],
+          "summary": "Update a address by ID",
+          "description": "Update an existing address's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific address by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddressInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Address updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/doctor-polyclinics": {
+        "get": {
+          "tags": [
+            "Doctor Polyclinics"
+          ],
+          "summary": "Get all doctor polyclinics",
+          "description": "Retrieve a list of all doctor polyclinics.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific doctor polyclinic by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_5"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Doctor Polyclinics"
+          ],
+          "summary": "Create a new doctor polyclinic",
+          "description": "Create new doctor polyclinic",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorPolyclinicInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "DoctorPolyclinic created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Doctor Polyclinics"
+          ],
+          "summary": "Delete a doctor polyclinic by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific doctor polyclinic by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "DoctorPolyclinic deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Doctor Polyclinics"
+          ],
+          "summary": "Update a doctor polyclinic by ID",
+          "description": "Update an existing doctor polyclinic's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific doctor polyclinic by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DoctorPolyclinicInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "DoctorPolyclinic updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/healtcare-facilities": {
+        "get": {
+          "tags": [
+            "Healthcare Facilities"
+          ],
+          "summary": "Get all healthcare facilities",
+          "description": "Retrieve a list of all healthcare facilities.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific healthcare facility by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_6"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Healthcare Facilities"
+          ],
+          "summary": "Create a new healthcare facility",
+          "description": "Create new healthcare facility",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthcareFacilityInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "HealthcareFacility created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Healthcare Facilities"
+          ],
+          "summary": "Delete a healthcare facility by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific healthcare facility by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "HealthcareFacility deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Healthcare Facilities"
+          ],
+          "summary": "Update a healthcare facility by ID",
+          "description": "Update an existing healthcare facility's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific healthcare facility by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthcareFacilityInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "HealthcareFacility updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/notifications": {
+        "get": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Get all notifications",
+          "description": "Retrieve a list of all notifications.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific notification by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_7"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Create a new notification",
+          "description": "Create new notification",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Notification created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Delete a notification by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific notification by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Notification deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Notifications"
+          ],
+          "summary": "Update a notification by ID",
+          "description": "Update an existing notification's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific notification by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotificationInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Notification updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/payments": {
+        "get": {
+          "tags": [
+            "Payments"
+          ],
+          "summary": "Get all payments",
+          "description": "Retrieve a list of all payments.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific payment by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_8"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Payments"
+          ],
+          "summary": "Create a new payment",
+          "description": "Create new payment",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Payment created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Payments"
+          ],
+          "summary": "Delete a payment by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific payment by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Payment deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Payments"
+          ],
+          "summary": "Update a payment by ID",
+          "description": "Update an existing payment's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific payment by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Payment updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/polyclinics": {
+        "get": {
+          "tags": [
+            "Polyclinics"
+          ],
+          "summary": "Get all polyclinics",
+          "description": "Retrieve a list of all polyclinics.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific polyclinic by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_9"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Polyclinics"
+          ],
+          "summary": "Create a new polyclinic",
+          "description": "Create new polyclinic",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolyclinicInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Polyclinic created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Polyclinics"
+          ],
+          "summary": "Delete a polyclinic by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific polyclinic by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Polyclinic deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Polyclinics"
+          ],
+          "summary": "Update a polyclinic by ID",
+          "description": "Update an existing polyclinic's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific polyclinic by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PolyclinicInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Polyclinic updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/role-permissions": {
+        "get": {
+          "tags": [
+            "Role Permissions"
+          ],
+          "summary": "Get all role permissions",
+          "description": "Retrieve a list of all role permissions.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific role permission by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_10"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Role Permissions"
+          ],
+          "summary": "Create a new role permission",
+          "description": "Create new role permission",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolePermissionInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "RolePermission created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Role Permissions"
+          ],
+          "summary": "Delete a role permission by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific role permission by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "RolePermission deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Role Permissions"
+          ],
+          "summary": "Update a role permission by ID",
+          "description": "Update an existing role permission's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific role permission by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RolePermissionInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "RolePermission updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/services": {
+        "get": {
+          "tags": [
+            "Services"
+          ],
+          "summary": "Get all services",
+          "description": "Retrieve a list of all services.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific service by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_11"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Services"
+          ],
+          "summary": "Create a new service",
+          "description": "Create new service",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Service created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Services"
+          ],
+          "summary": "Delete a service by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific service by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Service deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Services"
+          ],
+          "summary": "Update a service by ID",
+          "description": "Update an existing service's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific service by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Service updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/reservations": {
+        "get": {
+          "tags": [
+            "Reservations"
+          ],
+          "summary": "Get all reservations",
+          "description": "Retrieve a list of all reservations.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Retrieve a specific reservation by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful response",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/inline_response_200_12"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Reservations"
+          ],
+          "summary": "Create a new reservation",
+          "description": "Create new reservation",
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "201": {
+              "description": "Reservation created successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Reservations"
+          ],
+          "summary": "Delete a reservation by ID",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Delete a specific reservation by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "responses": {
+            "204": {
+              "description": "Reservation deleted successfully"
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        },
+        "patch": {
+          "tags": [
+            "Reservations"
+          ],
+          "summary": "Update a reservation by ID",
+          "description": "Update an existing reservation's information.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "query",
+              "description": "Update a specific reservation by their unique ID.",
+              "required": false,
+              "style": "form",
+              "explode": true,
+              "schema": {
+                "type": "string",
+                "example": "eq.123"
+              }
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReservationInput"
+                }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Reservation updated successfully"
+            },
+            "400": {
+              "description": "Bad request",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error400BadRequest"
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized access",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error401ApiKey"
+                  }
+                }
+              }
+            },
+            "409": {
+              "description": "Conflict",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error409Conflict"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/Error500Internal"
+                  }
+                }
+              }
+            }
+          },
+          "security": [
+            {
+              "ApiKeyAuth": [],
+              "BearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "User": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "user_id": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "username": {
+              "type": "string",
+              "example": "johndoe"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "johndoe@example.com"
+            },
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "UserInput": {
+          "required": [
+            "email",
+            "name",
+            "password",
+            "username"
+          ],
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string",
+              "example": "johndoe"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "johndoe@example.com"
+            },
+            "password": {
+              "type": "string",
+              "example": "password123"
+            },
+            "name": {
+              "type": "string",
+              "example": "John Doe"
+            }
+          }
+        },
+        "Doctor": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "user_id": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "specialty": {
+              "type": "string",
+              "example": "Cardiology"
+            },
+            "healthcare_facility_id": {
+              "type": "integer",
+              "example": 101
+            },
+            "name": {
+              "type": "string",
+              "example": "Dr. John Doe"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "DoctorInput": {
+          "required": [
+            "healthcare_facility_id",
+            "name",
+            "specialty",
+            "user_id"
+          ],
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "specialty": {
+              "type": "string",
+              "example": "Cardiology"
+            },
+            "healthcare_facility_id": {
+              "type": "integer",
+              "example": 101
+            },
+            "name": {
+              "type": "string",
+              "example": "Dr. John Doe"
+            }
+          }
+        },
+        "UserRole": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "user_id": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "role": {
+              "$ref": "#/components/schemas/AppRole"
+            }
+          }
+        },
+        "UserRoleInput": {
+          "required": [
+            "role",
+            "user_id"
+          ],
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "string",
+              "format": "uuid",
+              "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "role": {
+              "$ref": "#/components/schemas/AppRole"
+            }
+          }
+        },
+        "AppRole": {
+          "type": "string",
+          "example": "admin",
+          "enum": [
+            "super_admin",
+            "admin",
+            "user",
+            "doctor"
+          ]
+        },
+        "Address": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "street": {
+              "type": "string",
+              "example": "123 Main Street"
+            },
+            "city": {
+              "type": "string",
+              "example": "Springfield"
+            },
+            "state": {
+              "type": "string",
+              "example": "Illinois"
+            },
+            "postal_code": {
+              "type": "string",
+              "example": "62704"
+            },
+            "country": {
+              "type": "string",
+              "example": "United States"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "AddressInput": {
+          "required": [
+            "city",
+            "country",
+            "street"
+          ],
+          "type": "object",
+          "properties": {
+            "street": {
+              "type": "string",
+              "example": "123 Main Street"
+            },
+            "city": {
+              "type": "string",
+              "example": "Springfield"
+            },
+            "state": {
+              "type": "string",
+              "example": "Illinois"
+            },
+            "postal_code": {
+              "type": "string",
+              "example": "62704"
+            },
+            "country": {
+              "type": "string",
+              "example": "United States"
+            }
+          }
+        },
+        "DoctorPolyclinic": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "doctor_id": {
+              "type": "integer",
+              "example": 101
+            },
+            "polyclinic_id": {
+              "type": "integer",
+              "example": 202
+            }
+          }
+        },
+        "DoctorPolyclinicInput": {
+          "required": [
+            "doctor_id",
+            "polyclinic_id"
+          ],
+          "type": "object",
+          "properties": {
+            "doctor_id": {
+              "type": "integer",
+              "example": 101
+            },
+            "polyclinic_id": {
+              "type": "integer",
+              "example": 202
+            }
+          }
+        },
+        "AppHealthcareFacilityType": {
+          "type": "string",
+          "example": "admin",
+          "enum": [
+            "hospital",
+            "clinic",
+            "pharmacy",
+            "lab",
+            "rehabilitation",
+            "dental",
+            "specialist"
+          ]
+        },
+        "HealthcareFacility": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "City General Hospital"
+            },
+            "type": {
+              "$ref": "#/components/schemas/AppHealthcareFacilityType"
+            },
+            "address_id": {
+              "type": "integer",
+              "example": 10
+            },
+            "phone": {
+              "type": "string",
+              "example": "+1234567890"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "contact@hospital.com"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            },
+            "deleted_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "HealthcareFacilityInput": {
+          "required": [
+            "address_id",
+            "name",
+            "type"
+          ],
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "City General Hospital"
+            },
+            "type": {
+              "$ref": "#/components/schemas/AppHealthcareFacilityType"
+            },
+            "address_id": {
+              "type": "integer",
+              "example": 10
+            },
+            "phone": {
+              "type": "string",
+              "example": "+1234567890"
+            },
+            "email": {
+              "type": "string",
+              "format": "email",
+              "example": "contact@hospital.com"
+            }
+          }
+        },
+        "Notification": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "user_id": {
+              "type": "integer",
+              "example": 123
+            },
+            "title": {
+              "type": "string",
+              "example": "Appointment Reminder"
+            },
+            "message": {
+              "type": "string",
+              "example": "You have an appointment tomorrow at 10:00 AM."
+            },
+            "read": {
+              "type": "boolean",
+              "example": false
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T00:00:00Z"
+            }
+          }
+        },
+        "NotificationInput": {
+          "required": [
+            "message",
+            "title",
+            "user_id"
+          ],
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "integer",
+              "example": 123
+            },
+            "title": {
+              "type": "string",
+              "example": "Appointment Reminder"
+            },
+            "message": {
+              "type": "string",
+              "example": "You have an appointment tomorrow at 10:00 AM."
+            },
+            "read": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        },
+        "AppPaymentMethod": {
+          "type": "string",
+          "example": "cash",
+          "enum": [
+            "credit card",
+            "transfer",
+            "qris",
+            "cash"
+          ]
+        },
+        "Payment": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "reservation_id": {
+              "type": "integer",
+              "example": 1001
+            },
+            "amount": {
+              "type": "number",
+              "format": "float",
+              "example": 99.99
+            },
+            "payment_date": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T12:00:00Z"
+            },
+            "payment_method": {
+              "$ref": "#/components/schemas/AppPaymentMethod"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T12:00:00Z"
+            }
+          }
+        },
+        "PaymentInput": {
+          "required": [
+            "amount",
+            "payment_method",
+            "reservation_id"
+          ],
+          "type": "object",
+          "properties": {
+            "reservation_id": {
+              "type": "integer",
+              "example": 1001
+            },
+            "amount": {
+              "type": "number",
+              "format": "float",
+              "example": 99.99
+            },
+            "payment_method": {
+              "$ref": "#/components/schemas/AppPaymentMethod"
+            }
+          }
+        },
+        "Polyclinic": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "City Polyclinic"
+            },
+            "description": {
+              "type": "string",
+              "example": "A community clinic offering a range of healthcare services."
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T12:00:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-01-01T12:00:00Z"
+            }
+          }
+        },
+        "PolyclinicInput": {
+          "required": [
+            "name"
+          ],
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "City Polyclinic"
+            },
+            "description": {
+              "type": "string",
+              "example": "A community clinic offering a range of healthcare services."
+            }
+          }
+        },
+        "AppPermission": {
+          "type": "string",
+          "enum": [
+            "user_roles.select",
+            "user_roles.insert",
+            "user_roles.update",
+            "user_roles.delete",
+            "role_permissions.select",
+            "role_permissions.insert",
+            "role_permissions.update",
+            "role_permissions.delete",
+            "users.select",
+            "users.insert",
+            "users.update",
+            "users.delete",
+            "doctors.select",
+            "doctors.insert",
+            "doctors.update",
+            "doctors.delete",
+            "polyclinics.select",
+            "polyclinics.insert",
+            "polyclinics.update",
+            "polyclinics.delete",
+            "doctor_polyclinics.select",
+            "doctor_polyclinics.insert",
+            "doctor_polyclinics.update",
+            "doctor_polyclinics.delete",
+            "healthcare_facilities.select",
+            "healthcare_facilities.insert",
+            "healthcare_facilities.update",
+            "healthcare_facilities.delete",
+            "addresses.select",
+            "addresses.insert",
+            "addresses.update",
+            "addresses.delete",
+            "services.select",
+            "services.insert",
+            "services.update",
+            "services.delete",
+            "reservations.select",
+            "reservations.insert",
+            "reservations.update",
+            "reservations.delete",
+            "payments.select",
+            "payments.insert",
+            "payments.update",
+            "payments.delete",
+            "notifications.select",
+            "notifications.insert",
+            "notifications.update",
+            "notifications.delete"
+          ]
+        },
+        "RolePermission": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "role": {
+              "$ref": "#/components/schemas/AppRole"
+            },
+            "permission": {
+              "$ref": "#/components/schemas/AppPermission"
+            }
+          }
+        },
+        "RolePermissionInput": {
+          "required": [
+            "permission",
+            "role"
+          ],
+          "type": "object",
+          "properties": {
+            "role": {
+              "type": "string",
+              "example": "admin",
+              "enum": [
+                "super_admin",
+                "admin",
+                "user",
+                "doctor"
+              ]
+            },
+            "permission": {
+              "$ref": "#/components/schemas/AppPermission"
+            }
+          }
+        },
+        "Service": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "name": {
+              "type": "string",
+              "example": "General Consultation"
+            },
+            "description": {
+              "type": "string",
+              "example": "A basic general consultation service."
+            },
+            "price": {
+              "type": "number",
+              "format": "float",
+              "example": 50
+            },
+            "polyclinic_id": {
+              "type": "integer",
+              "example": 2
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-18T14:30:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-18T14:30:00Z"
+            }
+          }
+        },
+        "ServiceInput": {
+          "required": [
+            "name",
+            "polyclinic_id",
+            "price"
+          ],
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "example": "General Consultation"
+            },
+            "description": {
+              "type": "string",
+              "example": "A basic general consultation service."
+            },
+            "price": {
+              "type": "number",
+              "format": "float",
+              "example": 50
+            },
+            "polyclinic_id": {
+              "type": "integer",
+              "example": 2
+            }
+          }
+        },
+        "AppReservationStatus": {
+          "type": "string",
+          "example": "pending",
+          "enum": [
+            "pending",
+            "confirmed",
+            "canceled"
+          ]
+        },
+        "Reservation": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "example": 1
+            },
+            "user_id": {
+              "type": "integer",
+              "example": 2
+            },
+            "doctor_id": {
+              "type": "integer",
+              "example": 3
+            },
+            "service_id": {
+              "type": "integer",
+              "example": 4
+            },
+            "status": {
+              "$ref": "#/components/schemas/AppReservationStatus"
+            },
+            "appointment_date": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-18T14:00:00Z"
+            },
+            "payment_status": {
+              "type": "string",
+              "example": "paid",
+              "enum": [
+                "pending",
+                "paid",
+                "failed"
+              ]
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-18T12:00:00Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-18T14:30:00Z"
+            }
+          }
+        },
+        "ReservationInput": {
+          "required": [
+            "appointment_date",
+            "doctor_id",
+            "service_id",
+            "status",
+            "user_id"
+          ],
+          "type": "object",
+          "properties": {
+            "user_id": {
+              "type": "integer",
+              "example": 2
+            },
+            "doctor_id": {
+              "type": "integer",
+              "example": 3
+            },
+            "service_id": {
+              "type": "integer",
+              "example": 4
+            },
+            "status": {
+              "$ref": "#/components/schemas/AppReservationStatus"
+            },
+            "appointment_date": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-18T14:00:00Z"
+            }
+          }
+        },
+        "Error400BadRequest": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "example": "23502"
+            },
+            "details": {
+              "type": "string"
+            },
+            "hint": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "Error409Conflict": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "example": "23505"
+            },
+            "details": {
+              "type": "string"
+            },
+            "hint": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          }
+        },
+        "Error401ApiKey": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "example": "No API key found in request"
+            },
+            "hint": {
+              "type": "string",
+              "example": "No `apikey` request header or url param was found."
+            }
+          }
+        },
+        "Error500Internal": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "string",
+              "example": "internal_error"
+            },
+            "message": {
+              "type": "string",
+              "example": "An unexpected error occurred."
+            }
+          }
+        },
+        "v1_token_body": {
+          "required": [
+            "email",
+            "password"
+          ],
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "description": "User's email address.",
+              "format": "email",
+              "example": "admin@gmail.com"
+            },
+            "password": {
+              "type": "string",
+              "description": "User's password.",
+              "format": "password",
+              "example": "password123"
+            }
+          }
+        },
+        "inline_response_200": {
+          "type": "object",
+          "properties": {
+            "access_token": {
+              "type": "string",
+              "description": "JWT access token.",
+              "example": "eyJhbGciOiJIUzI1NiIsImtpZCI6IjJsaWE5OH..."
+            },
+            "token_type": {
+              "type": "string",
+              "description": "Token type.",
+              "example": "bearer"
+            },
+            "expires_in": {
+              "type": "integer",
+              "description": "Time in seconds until the token expires.",
+              "example": 3600
+            },
+            "expires_at": {
+              "type": "integer",
+              "description": "UNIX timestamp of token expiration.",
+              "example": 1732163421
+            },
+            "refresh_token": {
+              "type": "string",
+              "description": "Token for refreshing the session.",
+              "example": "iD9-D98KzdTSSRNkQVVJ_A"
+            },
+            "user": {
+              "$ref": "#/components/schemas/inline_response_200_user"
+            }
+          }
+        },
+        "inline_response_400": {
+          "type": "object",
+          "properties": {
+            "code": {
+              "type": "integer",
+              "example": 400
+            },
+            "error_code": {
+              "type": "string",
+              "example": "invalid_credentials"
+            },
+            "msg": {
+              "type": "string",
+              "example": "Invalid login credentials"
+            }
+          }
+        },
+        "inline_response_200_1": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/User"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/User"
+            }
+          ]
+        },
+        "inline_response_200_2": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Doctor"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Doctor"
+            }
+          ]
+        },
+        "inline_response_200_3": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/UserRole"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/UserRole"
+            }
+          ]
+        },
+        "inline_response_200_4": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Address"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Address"
+            }
+          ]
+        },
+        "inline_response_200_5": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/DoctorPolyclinic"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/DoctorPolyclinic"
+            }
+          ]
+        },
+        "inline_response_200_6": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/HealthcareFacility"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/HealthcareFacility"
+            }
+          ]
+        },
+        "inline_response_200_7": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Notification"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Notification"
+            }
+          ]
+        },
+        "inline_response_200_8": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Payment"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Payment"
+            }
+          ]
+        },
+        "inline_response_200_9": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Polyclinic"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Polyclinic"
+            }
+          ]
+        },
+        "inline_response_200_10": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/RolePermission"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/RolePermission"
+            }
+          ]
+        },
+        "inline_response_200_11": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Service"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Service"
+            }
+          ]
+        },
+        "inline_response_200_12": {
+          "oneOf": [
+            {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/Reservation"
+              }
+            },
+            {
+              "$ref": "#/components/schemas/Reservation"
+            }
+          ]
+        },
+        "inline_response_200_user_app_metadata": {
+          "type": "object",
+          "properties": {
+            "provider": {
+              "type": "string",
+              "example": "email"
+            },
+            "providers": {
+              "type": "array",
+              "example": [
+                "email"
+              ],
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "inline_response_200_user_identity_data": {
+          "type": "object",
+          "properties": {
+            "email": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            },
+            "email_verified": {
+              "type": "boolean",
+              "example": false
+            },
+            "phone_verified": {
+              "type": "boolean",
+              "example": false
+            },
+            "sub": {
+              "type": "string",
+              "example": "b955ba5d-4c2b-45b0-be37-898063e1e509"
+            }
+          }
+        },
+        "inline_response_200_user_identities": {
+          "type": "object",
+          "properties": {
+            "identity_id": {
+              "type": "string",
+              "example": "b955ba5d-4c2b-45b0-be37-898063e1e509"
+            },
+            "id": {
+              "type": "string",
+              "example": "b955ba5d-4c2b-45b0-be37-898063e1e509"
+            },
+            "user_id": {
+              "type": "string",
+              "example": "b955ba5d-4c2b-45b0-be37-898063e1e509"
+            },
+            "identity_data": {
+              "$ref": "#/components/schemas/inline_response_200_user_identity_data"
+            },
+            "provider": {
+              "type": "string",
+              "example": "email"
+            },
+            "last_sign_in_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "email": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            }
+          }
+        },
+        "inline_response_200_user": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "example": "33a73239-486f-4fef-9c87-5f4e0cba92c8"
+            },
+            "aud": {
+              "type": "string",
+              "example": "authenticated"
+            },
+            "role": {
+              "type": "string",
+              "example": "authenticated"
+            },
+            "email": {
+              "type": "string",
+              "example": "admin@gmail.com"
+            },
+            "email_confirmed_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "phone": {
+              "type": "string",
+              "example": "081536475867"
+            },
+            "confirmed_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "last_sign_in_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "app_metadata": {
+              "$ref": "#/components/schemas/inline_response_200_user_app_metadata"
+            },
+            "user_metadata": {
+              "type": "object"
+            },
+            "identities": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/inline_response_200_user_identities"
+              }
+            },
+            "created_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "updated_at": {
+              "type": "string",
+              "format": "date-time",
+              "example": "2024-11-21T03:30:21.611783159Z"
+            },
+            "is_anonymous": {
+              "type": "boolean",
+              "example": false
+            }
+          }
+        }
+      },
+      "securitySchemes": {
+        "ApiKeyAuth": {
+          "type": "apiKey",
+          "name": "apikey",
+          "in": "header"
+        },
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        }
+      }
+    }
+  }
